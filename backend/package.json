@@ -24,14 +24,17 @@
   "author": "MergeInfinity",
   "license": "MIT",
   "dependencies": {
-    "hono": "^4.0.0",
     "@hono/node-server": "^1.13.7",
-    "zod": "^3.22.4",
-    "pg": "^8.11.3",
+    "@x402-avm/avm": "^2.6.1",
+    "@x402-avm/core": "^2.6.1",
+    "@x402-avm/hono": "^2.6.1",
+    "algosdk": "^2.9.0",
     "dotenv": "^16.4.5",
+    "hono": "^4.0.0",
+    "pg": "^8.11.3",
     "pino": "^8.19.0",
     "pino-pretty": "^10.3.1",
-    "algosdk": "^2.9.0"
+    "zod": "^3.22.4"
   },
   "devDependencies": {
     "@types/node": "^20.11.25",

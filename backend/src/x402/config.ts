@@ -1,61 +1,38 @@
 /**
  * x402 Payment Configuration
- * Based on Algorand x402 specification
+ * Uses official @x402-avm packages for Algorand x402 protocol
  */
 
 import { config } from '@/server/config';
+import { ALGORAND_TESTNET_CAIP2 } from '@x402-avm/avm';
 
-import type { X402AcceptEntry } from './types';
+// ---------- Route Configuration ----------
+// Keys must match "METHOD /path" format expected by @x402-avm/hono middleware
 
-export interface X402Config {
-  facilitatorUrl: string;
-  network: string; // CAIP-2 format
-  payToAddress: string;
-  defaultPrice: string;
-  maxTimeoutSeconds: number;
-}
-
-export interface X402Resource {
-  path: string;
-  method: string;
-  price: string;
-  description: string;
-  accepts: X402AcceptEntry[];
-}
-
-// x402 configuration
-export const x402Config: X402Config = {
-  facilitatorUrl: config.x402.facilitatorUrl,
-  network: config.x402.network,
-  payToAddress: config.x402.payToAddress,
-  defaultPrice: config.x402.defaultPrice,
-  maxTimeoutSeconds: config.x402.maxTimeoutSeconds,
-};
-
-// Define protected resources
-export const protectedResources: Record<string, X402Resource> = {
+export const x402Routes: any = {
   'POST /api/v1/analyze': {
-    path: '/api/v1/analyze',
-    method: 'POST',
-    price: '$0.02',
-    description: 'TEAL/PyTeal code analysis with optimization recommendations',
-    accepts: [
-      {
-        scheme: 'exact',
-        network: config.x402.network,
-        extra: {
-          asset: config.x402.asset,
-        },
-        payTo: config.x402.payToAddress,
-        price: '$0.02',
-        maxTimeoutSeconds: config.x402.maxTimeoutSeconds,
+    accepts: {
+      scheme: 'exact',
+      network: ALGORAND_TESTNET_CAIP2,
+      payTo: config.x402.payToAddress,
+      price: `$${config.x402.defaultPrice}`,
+      maxTimeoutSeconds: config.x402.maxTimeoutSeconds,
+      extra: {
+        asset: config.x402.asset,
       },
-    ],
+    },
+    description: 'TEAL/PyTeal code analysis with optimization recommendations',
+    mimeType: 'application/json',
   },
 };
 
-// Helper to get resource config
-export function getResourceConfig(method: string, path: string): X402Resource | undefined {
-  const key = `${method} ${path}`;
-  return protectedResources[key];
-}
+// ---------- Facilitator Configuration ----------
+
+export const facilitatorUrl = config.x402.facilitatorUrl;
+
+// ---------- Paywall Configuration ----------
+
+export const paywallConfig = {
+  appName: 'AlgoForge',
+  testnet: true,
+};

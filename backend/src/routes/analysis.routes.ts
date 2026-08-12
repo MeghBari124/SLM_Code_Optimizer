@@ -1,30 +1,17 @@
 import { Hono } from 'hono';
-import { x402Middleware } from '@/x402/middleware';
 import { logger } from '@/common/logger';
 import type { ApiResponse } from '@/types';
-import type { X402PaymentContext } from '@/x402/types';
 
-export const analysisRoutes = new Hono<{
-  Variables: {
-    payment: X402PaymentContext;
-  };
-}>();
+export const analysisRoutes = new Hono();
 
-// Apply x402 payment middleware to all routes
-analysisRoutes.use('/*', x402Middleware());
+// Note: x402 payment middleware is applied at the app level in app.ts
+// The official @x402-avm/hono middleware automatically protects 
+// "POST /api/v1/analyze" based on the route config in x402/config.ts
 
 // POST /api/v1/analyze - Main analysis endpoint (x402 protected)
 analysisRoutes.post('/', async (c) => {
   try {
-    logger.info('Analysis request received');
-
-    // Get payment info from context (set by x402 middleware)
-    const payment = c.get('payment');
-
-    logger.info('Payment verified for analysis', {
-      transactionId: payment?.transactionId,
-      amount: payment?.amount,
-    });
+    logger.info('Analysis request received (payment verified by x402 middleware)');
 
     // Parse request body
     const body = await c.req.json();
@@ -51,11 +38,10 @@ analysisRoutes.post('/', async (c) => {
       analysisId,
       language,
       codeLength: code.length,
-      payment: payment?.transactionId,
     });
 
-    // Phase 3+: Actual analysis will be implemented
-    // For now, return a structured response
+    // Phase 3+: Actual analysis will be implemented here
+    // For now, return a structured response showing the payment went through
     const response: ApiResponse<any> = {
       success: true,
       data: {
@@ -88,17 +74,9 @@ analysisRoutes.post('/', async (c) => {
         recommendations: [],
         verifiedImprovements: [],
         estimatedImprovements: [],
-        payment: {
-          amount: payment?.amount || '0',
-          asset: 'USDC',
-          transactionId: payment?.transactionId || '',
-          network: 'algorand:testnet-v1.0',
-          timestamp: new Date().toISOString(),
-        },
         proof: {
           reportHash: generateDemoHash(analysisId),
           algorithm: 'sha256' as const,
-          transactionId: payment?.transactionId || '',
           network: 'algorand:testnet-v1.0',
           timestamp: new Date().toISOString(),
         },
