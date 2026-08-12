@@ -19,7 +19,7 @@ export const config = {
     facilitatorUrl: process.env.X402_FACILITATOR_URL || 'https://facilitator.goplausible.xyz',
     network: process.env.X402_NETWORK || 'algorand:testnet-v1.0',
     payToAddress: process.env.X402_PAY_TO_ADDRESS || '',
-    asset: process.env.X402_ASSET || '',
+    asset: process.env.X402_ASSET || '10458941', // USDC ASA ID on Algorand TestNet
     defaultPrice: process.env.X402_DEFAULT_PRICE || '0.02',
     maxTimeoutSeconds: parseInt(process.env.X402_MAX_TIMEOUT_SECONDS || '300', 10),
   },
