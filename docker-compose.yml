@@ -1,0 +1,72 @@
+version: '3.8'
+
+services:
+  # PostgreSQL Database
+  postgres:
+    image: postgres:15-alpine
+    container_name: algoforge-db
+    environment:
+      POSTGRES_USER: algoforge
+      POSTGRES_PASSWORD: algoforge_dev_password
+      POSTGRES_DB: algoforge
+    ports:
+      - "5432:5432"
+    volumes:
+      - postgres_data:/var/lib/postgresql/data
+    networks:
+      - algoforge-network
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U algoforge"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+
+  # Backend API
+  backend:
+    build:
+      context: ./backend
+      dockerfile: Dockerfile
+    container_name: algoforge-backend
+    environment:
+      NODE_ENV: development
+      PORT: 3001
+      DATABASE_URL: postgresql://algoforge:algoforge_dev_password@postgres:5432/algoforge
+      X402_FACILITATOR_URL: https://facilitator.goplausible.xyz
+      X402_NETWORK: algorand:testnet-v1.0
+    ports:
+      - "3001:3001"
+    volumes:
+      - ./backend:/app
+      - /app/node_modules
+    depends_on:
+      postgres:
+        condition: service_healthy
+    networks:
+      - algoforge-network
+    command: npm run dev
+
+  # Frontend
+  frontend:
+    build:
+      context: ./frontend
+      dockerfile: Dockerfile
+    container_name: algoforge-frontend
+    environment:
+      VITE_API_BASE_URL: http://localhost:3001
+    ports:
+      - "5173:5173"
+    volumes:
+      - ./frontend:/app
+      - /app/node_modules
+    depends_on:
+      - backend
+    networks:
+      - algoforge-network
+    command: npm run dev
+
+volumes:
+  postgres_data:
+
+networks:
+  algoforge-network:
+    driver: bridge

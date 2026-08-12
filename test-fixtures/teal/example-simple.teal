@@ -1,0 +1,22 @@
+#pragma version 8
+// Simple TEAL example for testing
+// This is a basic approval program
+
+txn ApplicationID
+int 0
+==
+bnz main_l2
+// Application call
+txn OnCompletion
+int NoOp
+==
+bnz main_l3
+err
+main_l2:
+// Creation
+int 1
+return
+main_l3:
+// NoOp call
+int 1
+return
