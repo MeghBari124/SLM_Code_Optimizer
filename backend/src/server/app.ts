@@ -46,6 +46,7 @@ app.use('/api/*', cors({
   credentials: false,
   allowMethods: ['GET', 'POST', 'PUT', 'DELETE', 'OPTIONS'],
   allowHeaders: ['Content-Type', 'Authorization', 'X-Transaction-Id', 'X-Wallet-Address', 'X-Payment'],
+  exposeHeaders: ['payment-required'],
 }));
 
 // ---------------------------------------------------------------------------
