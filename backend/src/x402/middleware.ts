@@ -3,10 +3,10 @@
  * Uses official @x402-avm/hono package for payment-gated routes
  */
 
-import { paymentMiddlewareFromConfig } from '@x402-avm/hono';
-import { HTTPFacilitatorClient } from '@x402-avm/core/server';
-import { ExactAvmScheme } from '@x402-avm/avm/exact/server';
-import { ALGORAND_TESTNET_CAIP2 } from '@x402-avm/avm';
+import { paymentMiddlewareFromConfig } from '@x402/hono';
+import { HTTPFacilitatorClient } from '@x402/core/server';
+import { ExactAvmScheme } from '@x402/avm/exact/server';
+import { ALGORAND_TESTNET_CAIP2 } from '@/config/endpoints.config';
 import { x402Routes, facilitatorUrl } from './config';
 import { logger } from '@/common/logger';
 

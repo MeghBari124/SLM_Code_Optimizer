@@ -4,12 +4,26 @@
  */
 
 import { config } from '@/server/config';
-import { ALGORAND_TESTNET_CAIP2 } from '@x402-avm/avm';
+import { ALGORAND_TESTNET_CAIP2 } from '@/config/endpoints.config';
 
 // ---------- Route Configuration ----------
 // Keys must match "METHOD /path" format expected by @x402-avm/hono middleware
 
 export const x402Routes: any = {
+  'POST /api/v1/analyze': {
+    accepts: {
+      scheme: 'exact',
+      network: ALGORAND_TESTNET_CAIP2,
+      payTo: config.x402.payToAddress,
+      price: `$${config.x402.defaultPrice}`,
+      maxTimeoutSeconds: config.x402.maxTimeoutSeconds,
+      extra: {
+        asset: config.x402.asset,
+      },
+    },
+    description: 'Algorand smart contract optimization analysis — $0.02 USDC',
+    mimeType: 'application/json',
+  },
   'POST /api/v1/analyze/quick': {
     accepts: {
       scheme: 'exact',

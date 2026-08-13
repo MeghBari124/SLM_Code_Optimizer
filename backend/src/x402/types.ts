@@ -12,5 +12,4 @@ export interface X402PaymentContext {
   sender?: string;
 }
 
-// Re-export useful constants
-export { ALGORAND_TESTNET_CAIP2 } from '@x402-avm/avm';
+// Export types used across the application
