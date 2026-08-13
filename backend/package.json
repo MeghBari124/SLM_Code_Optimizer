@@ -25,6 +25,9 @@
   "license": "MIT",
   "dependencies": {
     "@hono/node-server": "^1.13.7",
+    "@x402/avm": "^2.22.0",
+    "@x402/core": "^2.22.0",
+    "@x402/hono": "^2.22.0",
     "@x402-avm/avm": "^2.6.1",
     "@x402-avm/core": "^2.6.1",
     "@x402-avm/hono": "^2.6.1",
