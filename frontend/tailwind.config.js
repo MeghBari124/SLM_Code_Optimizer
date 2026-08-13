@@ -19,6 +19,9 @@ export default {
           800: '#075985',
           900: '#0c4a6e',
         },
+        swiss: {
+          red: '#FF3000',
+        }
       },
       fontFamily: {
         sans: ['Inter', 'system-ui', 'sans-serif'],

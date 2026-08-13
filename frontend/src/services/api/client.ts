@@ -6,7 +6,7 @@ const API_BASE_URL = import.meta.env.VITE_API_BASE_URL || 'http://localhost:3001
 // Create axios instance with default config
 export const apiClient = axios.create({
   baseURL: `${API_BASE_URL}/api/v1`,
-  timeout: 30000,
+  timeout: 120000, // Increased to 2 minutes for long LLM generation
   headers: {
     'Content-Type': 'application/json',
   },
@@ -39,10 +39,17 @@ apiClient.interceptors.response.use(
       return Promise.reject(error);
     }
 
+    let defaultMsg = 'An unexpected error occurred';
+    if (error.code === 'ECONNABORTED') {
+      defaultMsg = 'Request timed out waiting for AI optimization. Please try again.';
+    } else if (!error.response) {
+      defaultMsg = 'Network error. Please check if the backend is running.';
+    }
+
     // Generic error handling
     const apiError = {
-      code: error.response?.data?.error?.code || 'UNKNOWN_ERROR',
-      message: error.response?.data?.error?.message || 'An unexpected error occurred',
+      code: error.response?.data?.error?.code || error.code || 'UNKNOWN_ERROR',
+      message: error.response?.data?.error?.message || defaultMsg,
       details: error.response?.data?.error?.details,
     };
 

@@ -1,0 +1,7 @@
+#pragma version 8
+math_helper:
+// Not a hot function
+int 2
+int 2
++
+return

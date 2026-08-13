@@ -9,10 +9,40 @@
  */
 
 import type { Context } from 'hono';
+import { runOptimizationPipeline } from '../ai/orchestrator';
 
-export function handleAnalyzeDeep(c: Context) {
-  return c.json({
-    status: 'paid',
-    tier: 'deep',
-  });
+export async function handleAnalyzeDeep(c: Context) {
+  try {
+    const body = await c.req.json();
+    
+    if (typeof body.source !== 'string' || typeof body.fileName !== 'string') {
+      return c.json(
+        {
+          success: false,
+          error: {
+            code: 'VALIDATION_ERROR',
+            message: 'Request body must contain "source" (string) and "fileName" (string)',
+          },
+        },
+        400
+      );
+    }
+
+    const { source, fileName } = body;
+    const report = await runOptimizationPipeline(source, fileName);
+
+    return c.json(report);
+  } catch (error) {
+    console.error('[handleAnalyzeDeep] Error:', error);
+    return c.json(
+      {
+        success: false,
+        error: {
+          code: 'INTERNAL_ERROR',
+          message: 'An error occurred during deep analysis orchestration',
+        },
+      },
+      500
+    );
+  }
 }

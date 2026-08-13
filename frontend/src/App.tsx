@@ -2,6 +2,7 @@ import { BrowserRouter } from 'react-router-dom';
 import { QueryClient, QueryClientProvider } from '@tanstack/react-query';
 import AppRoutes from './app/routes';
 import { WalletProvider, WalletManager, WalletId, NetworkId } from '@txnlab/use-wallet-react';
+import { SwissShell } from '@/components/swiss/SwissShell';
 
 // Create WalletManager for Algorand TestNet
 const walletManager = new WalletManager({
@@ -28,7 +29,9 @@ function App() {
     <WalletProvider manager={walletManager}>
       <QueryClientProvider client={queryClient}>
         <BrowserRouter>
-          <AppRoutes />
+          <SwissShell>
+            <AppRoutes />
+          </SwissShell>
         </BrowserRouter>
       </QueryClientProvider>
     </WalletProvider>

@@ -75,5 +75,28 @@ export interface ProofInfo {
   algorithm: string;
   transactionId: string;
   network: string;
-  timestamp: string;
+}
+
+export type ValidationStatus = 'VALIDATED' | 'UNVERIFIED' | 'REJECTED';
+
+export interface ValidatedFinding {
+  id: string;
+  category: 'storage' | 'redundant_ops' | 'dead_code' | 'architecture';
+  severity: 'low' | 'medium' | 'high';
+  functionName: string;
+  problem: string;
+  reasoning: string;
+  suggestedCodeSnippet: string;
+  confidence: number;
+  validationStatus: ValidationStatus;
+  metricBefore: number;
+  metricAfter: number | null;
+  storageOpsBefore: number;
+  storageOpsAfter: number | null;
+}
+
+export interface OptimizationReport {
+  fileName: string;
+  before: any; // TealAnalysisResult
+  findings: ValidatedFinding[];
 }

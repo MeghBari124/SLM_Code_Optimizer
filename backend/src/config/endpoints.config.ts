@@ -60,6 +60,20 @@ export const analyzeRoutes = {
     },
     description: 'Deep TEAL/PyTeal SLM analysis — $0.05 USDC',
   },
+
+  /**
+   * Repo analysis tier — SLM-powered optimization for full repositories.
+   * Price: $0.05 USDC on Algorand TestNet.
+   */
+  'POST /api/v1/analyze/repo': {
+    accepts: {
+      scheme: 'exact' as const,
+      network: ALGORAND_TESTNET_CAIP2,
+      payTo: PAY_TO,
+      price: '$0.05',
+    },
+    description: 'Repository TEAL SLM analysis — $0.05 USDC',
+  },
 } as const;
 
 export type AnalyzeRoutesConfig = typeof analyzeRoutes;
