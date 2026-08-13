@@ -17,6 +17,8 @@
     "@perawallet/connect": "^1.6.0",
     "@tanstack/react-query": "^5.28.0",
     "@txnlab/use-wallet-react": "^3.12.0",
+    "@x402-avm/avm": "^2.6.1",
+    "@x402-avm/core": "^2.6.1",
     "algosdk": "^2.9.0",
     "axios": "^1.6.7",
     "buffer": "^6.0.3",

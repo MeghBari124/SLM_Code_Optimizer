@@ -42,4 +42,7 @@ export default defineConfig({
     outDir: 'dist',
     sourcemap: true,
   },
+  optimizeDeps: {
+    include: ['@perawallet/connect', '@evanhahn/lottie-web-light'],
+  },
 });

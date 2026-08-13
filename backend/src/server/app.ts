@@ -2,46 +2,21 @@ import { Hono } from 'hono';
 import { cors } from 'hono/cors';
 import { logger as honoLogger } from 'hono/logger';
 
-import { paymentMiddlewareFromConfig } from '@x402/hono';
-import { ExactAvmScheme } from '@x402/avm/exact/server';
-import { HTTPFacilitatorClient } from '@x402/core/server';
+import { x402PaymentMiddleware } from '@/x402/middleware';
 
 import { healthRoutes } from '@/routes/health.routes';
 import { analysisRoutes } from '@/routes/analysis.routes';
-import {
-  analyzeRoutes,
-  ALGORAND_TESTNET_CAIP2 as LOCAL_CAIP2,
-} from '@/config/endpoints.config';
 
 import { handleAnalyzeQuick } from '@/handlers/analyzeQuick';
 import { handleAnalyzeDeep } from '@/handlers/analyzeDeep';
+import { handleAnalyzeRepo } from '@/handlers/analyzeRepo';
 
 import { config } from './config';
 import { errorHandler } from './middleware/error-handler';
 import { requestLogger } from './middleware/request-logger';
 
 
-// ---------------------------------------------------------------------------
-// x402 facilitator client
-// ---------------------------------------------------------------------------
 
-const facilitatorClient = new HTTPFacilitatorClient({
-  url:
-    process.env.X402_FACILITATOR_URL ??
-    'https://facilitator.goplausible.xyz',
-});
-
-
-// ---------------------------------------------------------------------------
-// AVM exact scheme registration
-// ---------------------------------------------------------------------------
-
-const avmSchemes = [
-  {
-    network: LOCAL_CAIP2,
-    server: new ExactAvmScheme(),
-  },
-];
 
 
 // ---------------------------------------------------------------------------
@@ -107,20 +82,17 @@ app.use(
 
 app.use(
   '/api/v1/analyze/quick',
-  paymentMiddlewareFromConfig(
-    analyzeRoutes,
-    facilitatorClient,
-    avmSchemes,
-  ),
+  x402PaymentMiddleware
 );
 
 app.use(
   '/api/v1/analyze/deep',
-  paymentMiddlewareFromConfig(
-    analyzeRoutes,
-    facilitatorClient,
-    avmSchemes,
-  ),
+  x402PaymentMiddleware
+);
+
+app.use(
+  '/api/v1/analyze/repo',
+  x402PaymentMiddleware
 );
 
 
@@ -156,6 +128,11 @@ app.post(
 app.post(
   '/api/v1/analyze/deep',
   handleAnalyzeDeep,
+);
+
+app.post(
+  '/api/v1/analyze/repo',
+  handleAnalyzeRepo,
 );
 
 

@@ -1,0 +1,25 @@
+#pragma version 8
+txn ApplicationID
+int 0
+==
+bnz handle_create
+txn OnCompletion
+int NoOp
+==
+bnz handle_noop
+err
+
+handle_create:
+int 1
+return
+
+handle_noop:
+// A hot function with lots of redundant storage ops
+byte "key1"
+app_global_get
+byte "key2"
+app_global_get
+byte "key1"
+app_global_get
+int 1
+return
